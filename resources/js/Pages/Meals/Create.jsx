@@ -21,9 +21,16 @@ export default function Create() {
 
     };
     const handleCapture = () => {
-        const imageSrc = webcamRef.current.getScreenshot(); // Capture the photo
+        const imageSrc = webcamRef.current.getScreenshot();
         if (imageSrc) {
-            setPreview(imageSrc); // Set the preview image
+            setPreview(imageSrc);
+
+            fetch(imageSrc)
+                .then(res => res.blob())
+                .then(blob => {
+                    const file = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
+                    setData('image', file);
+                });
         }
     };
 
