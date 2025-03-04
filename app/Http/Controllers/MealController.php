@@ -52,7 +52,7 @@ class MealController extends Controller
 
         Instructions:
         - Accurately determine the **calories, protein, fat, and carbs** in the meal.
-        - Provide a brief description of the meal.
+        - Provide a brief description of the meal. Maximum 254chars length
         - Rate the meal's health score on a scale of 1 to 10 (1 = unhealthy, 10 = very healthy).
         - ALWAYS return the response **strictly in this JSON format**:
         - Be prepared to encounter serbian meals like Musaka, becarac etc.
