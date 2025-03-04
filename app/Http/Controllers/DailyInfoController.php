@@ -9,10 +9,15 @@ use App\Models\UserInfo;
 class DailyInfoController extends Controller
 {
     public function index(){
+        $user = auth()->user();
+        if($user->is_new){
+            return redirect()->route('onboarding');
+        }
+
         $dailyInfo = DailyInfo::where('user_id', auth()->id())->latest()->first();
         if (!$dailyInfo || $dailyInfo->date !== today()->toDateString()) {
             $dailyInfo = DailyInfo::create([
-                'user_id' => auth()->id(),
+                'user_id' => $user->id,
                 'date' => today()->toDateString(),
                 'total_calories' => 0,
                 'total_fat' => 0, // these are already default but nvm

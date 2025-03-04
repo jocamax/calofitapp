@@ -22,7 +22,7 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <MantineProvider withGlobalStyles withNormalizeCSS defaultColorScheme={'dark'}>
+            <MantineProvider withGlobalStyles withNormalizeCSS defaultColorScheme={'light'}>
             <App {...props} />
             </MantineProvider>);
     },

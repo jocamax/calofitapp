@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('daily_infos', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
-            $table->date('date')->unique();
+            $table->date('date');
             $table->float('total_calories')->default(0);
             $table->float('total_protein')->default(0);
             $table->float('total_fat')->default(0);

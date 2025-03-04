@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_new'
     ];
 
     /**
@@ -48,8 +49,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function user_info(): HasOne{
-        return $this->hasOne(UserInfo::class);
+    public function user_info(): HasMany{
+        return $this->hasMany(UserInfo::class);
     }
 
     public function meals(): HasMany{

@@ -19,6 +19,8 @@ export default function Create(){
     };
 
     return (
+        <div className="min-h-screen bg-gray-50 text-gray-800 p-1">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded">
             <h2 className="text-2xl font-semibold text-center mb-4">Set Up Your Profile</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -115,5 +117,8 @@ export default function Create(){
                 </button>
             </form>
         </div>
+        </div>
+        </div>
+
     )
 }
