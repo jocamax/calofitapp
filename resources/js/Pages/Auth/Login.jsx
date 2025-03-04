@@ -95,6 +95,10 @@ export default function Login({ status, canResetPassword }) {
                     </PrimaryButton>
                 </div>
             </form>
+            <div className='flex gap-2 mt-4'>
+                <h4 className='text-sm text-gray-600'>Don't have an account?</h4>
+                <Link className='text-sm text-blue-600' href={route('register')}>Sign Up</Link>
+            </div>
         </GuestLayout>
     );
 }
