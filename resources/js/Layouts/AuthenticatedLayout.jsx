@@ -18,7 +18,7 @@ export default function AuthenticatedLayout({children}) {
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
-                                <Link href={route('daily_info.index')}>
+                                <Link href={route('daily_info.showLatest')}>
                                     <ApplicationLogo className="h-14" />
                                 </Link>
                             </div>

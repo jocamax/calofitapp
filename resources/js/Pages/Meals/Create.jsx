@@ -20,19 +20,19 @@ export default function Create() {
             setPreview(URL.createObjectURL(file));
 
     };
-    const handleCapture = () => {
-        const imageSrc = webcamRef.current.getScreenshot();
-        if (imageSrc) {
-            setPreview(imageSrc);
-
-            fetch(imageSrc)
-                .then(res => res.blob())
-                .then(blob => {
-                    const file = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
-                    setData('image', file);
-                });
-        }
-    };
+    // const handleCapture = () => {
+    //     const imageSrc = webcamRef.current.getScreenshot();
+    //     if (imageSrc) {
+    //         setPreview(imageSrc);
+    //
+    //         fetch(imageSrc)
+    //             .then(res => res.blob())
+    //             .then(blob => {
+    //                 const file = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
+    //                 setData('image', file);
+    //             });
+    //     }
+    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -69,32 +69,6 @@ export default function Create() {
                             <input type="file" accept="image/*" capture="environment" onChange={handleFileChange}
                                    className="hidden"/>
                         </label>
-                        <p>
-                            or
-                        </p>
-                        <div className="flex flex-col items-center">
-                            <p>Take a photo</p>
-                            <div className="relative w-64 h-64">
-                                <Webcam
-                                    audio={false}
-                                    ref={webcamRef}
-                                    screenshotFormat="image/jpeg"
-                                    width="100%"
-                                    videoConstraints={{
-                                        facingMode: 'environment',
-                                    }}
-                                    className="rounded-lg"
-                                />
-                            </div>
-                            <button
-                                type="button"
-                                onClick={handleCapture}
-
-                                className="bg-blue-500 text-white px-6 py-3 rounded-md mt-4"
-                            >
-                                Capture Photo
-                            </button>
-                        </div>
 
                         {preview && <img src={preview} alt="Meal Preview"
                                          className="w-64 h-64 object-cover rounded-xl shadow-lg"/>}

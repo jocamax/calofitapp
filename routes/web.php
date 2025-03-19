@@ -23,7 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/userinfo/edit', [UserInfoController::class, 'edit'])->name('userinfo.edit');
     Route::put('/userinfo/{userInfo}', [UserInfoController::class, 'update'])->name('userinfo.update');
 
-    Route::get('/daily_info', [DailyInfoController::class, 'index'])->name('daily_info.index');
+    Route::get('/daily_info/all', [DailyInfoController::class, 'index'])->name('daily_info.index');
+    Route::get('/daily_info', [DailyInfoController::class, 'showLatest'])->name('daily_info.showLatest');
 
     Route::resource('meals', MealController::class)->except(['destroy']);
 
