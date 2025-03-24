@@ -26,7 +26,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/daily_info/all', [DailyInfoController::class, 'index'])->name('daily_info.index');
     Route::get('/daily_info', [DailyInfoController::class, 'showLatest'])->name('daily_info.showLatest');
 
+    Route::get('/meals/{meal}/recalculate', [MealController::class, 'recalculateShow'])->name('meals.recalculateShow');
+    Route::put('/meals/{meal}/recalculate', [MealController::class, 'recalculate'])->name('meals.recalculate');
+    Route::get('/meals/statistics', [MealController::class, 'statistics'])->name('meals.statistics');
     Route::resource('meals', MealController::class)->except(['destroy']);
+
 
     Route::get('/onboarding', [OnboardingController::class, 'index'])->name('onboarding');
     Route::post('/onboarding/complete', [OnboardingController::class, 'complete'])->name('onboarding.complete');

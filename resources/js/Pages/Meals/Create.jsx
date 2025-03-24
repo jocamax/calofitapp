@@ -20,19 +20,6 @@ export default function Create() {
             setPreview(URL.createObjectURL(file));
 
     };
-    // const handleCapture = () => {
-    //     const imageSrc = webcamRef.current.getScreenshot();
-    //     if (imageSrc) {
-    //         setPreview(imageSrc);
-    //
-    //         fetch(imageSrc)
-    //             .then(res => res.blob())
-    //             .then(blob => {
-    //                 const file = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
-    //                 setData('image', file);
-    //             });
-    //     }
-    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -83,7 +70,7 @@ export default function Create() {
                         </button>
                     </div>
                 </form>
-                <Link href={route('daily_info.index')} className='absolute top-5 left-5 p-2 bg-gray-300 rounded-full'>
+                <Link href={route('daily_info.showLatest')} className='absolute top-5 left-5 p-2 bg-gray-300 rounded-full'>
                     <IoIosArrowBack className='text-2xl'/>
                 </Link>
             </div>

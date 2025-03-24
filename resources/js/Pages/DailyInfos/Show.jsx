@@ -5,6 +5,7 @@ import {Link} from "@inertiajs/react";
 import { TbHealthRecognition } from "react-icons/tb";
 import { GiSlicedBread } from "react-icons/gi";
 import { LuDumbbell } from "react-icons/lu";
+import { IoIosStats } from "react-icons/io";
 import { GiMeal } from "react-icons/gi";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import MealListItem from "@/Components/MealListItem.jsx";
@@ -20,7 +21,8 @@ export default function Index({dailyInfo, userInfo, recentMeals}){
                     <Link href={route('meals.create')} className='m-2 px-4 py-2 bg-blue-400 rounded-xl'>+ Add new
                         meal</Link>
                 </div>
-                <Link href={route('daily_info.index')} className={`p-4 m-2 flex flex-col bg-yellow-300 ${parseInt(userInfo[0].calorie_needed - dailyInfo.total_calories) < -100 && 'bg-red-400'} rounded-xl hover:bg-yellow-400 transition`}>
+                <Link href={route('daily_info.index')}
+                      className={`p-4 m-2 flex flex-col bg-yellow-300 ${parseInt(userInfo[0].calorie_needed - dailyInfo.total_calories) < -100 && 'bg-red-400'} rounded-xl hover:bg-yellow-400 transition`}>
                     <div className='flex justify-between'>
                         <div className='font-bold'>Calories left</div>
                         <div className='bg-yellow-400 text-2xl p-2 rounded-full'><LiaFireAltSolid/></div>
@@ -99,7 +101,7 @@ export default function Index({dailyInfo, userInfo, recentMeals}){
                 </div>
                 {
                     parseInt(userInfo[0].calorie_needed - dailyInfo.total_calories) < -100 ?
-                        <GuiltTrip caloriesEaten={parseInt(userInfo[0].calorie_needed - dailyInfo.total_calories)}/>:
+                        <GuiltTrip caloriesEaten={parseInt(userInfo[0].calorie_needed - dailyInfo.total_calories)}/> :
                         <></>
                     //add smthing later for
 
@@ -114,6 +116,16 @@ export default function Index({dailyInfo, userInfo, recentMeals}){
                         {parseInt(userInfo[0].calorie_needed)}kcal
                     </h2>
 
+                </div>
+                <div className='p-4 m-2 mt-4 flex flex-col  bg-green-300 rounded-xl'>
+                    <Link href={route('meals.statistics')} className='flex justify-between items-center'>
+                        <div className='text-4xl ml-2 flex gap-2 items-center'>
+                            <IoIosStats />
+                            <h2 className='text-2xl'>Your Statistics</h2>
+                        </div>
+                        <div className='bg-green-400 text-2xl p-2 rounded-full'><FaAngleDoubleRight/>
+                        </div>
+                    </Link>
                 </div>
                 <div className='m-3 mt-4'>
                     <h2 className='text-3xl mb-6 font-bold'>Recent meals</h2>

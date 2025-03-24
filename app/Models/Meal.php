@@ -12,7 +12,7 @@ class Meal extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'date', 'calories', 'protein', 'fat', 'carbs', 'description', 'health_score', 'image_path'
+        'user_id', 'date', 'calories', 'protein', 'fat', 'carbs', 'description', 'ingredients', 'health_score', 'image_path'
     ];
 
     public static function boot(){

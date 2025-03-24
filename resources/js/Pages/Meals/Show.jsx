@@ -73,7 +73,14 @@ export default function Show({meal}){
                         </div>
                     </div>
                     <div className='p-2'>
-                        <h2 className='text-xl font-bold'>Meal description</h2>
+                        <div>
+                        <h2 className='text-xl font-bold'>Ingredients</h2>
+                            <Link href={route('meals.recalculateShow', meal.id)}>Edit</Link>
+                        </div>
+                        <p>{meal?.ingredients}</p>
+                    </div>
+                    <div className='p-2'>
+                    <h2 className='text-xl font-bold'>Meal description</h2>
                         <p>{meal.description}</p>
                     </div>
                 </div>

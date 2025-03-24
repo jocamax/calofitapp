@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DailyInfo;
 use App\Models\Meal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -51,8 +52,11 @@ class MealController extends Controller
         You are a highly accurate nutrition assistant. You analyze meal images and return precise nutritional information in consistent JSON format.
 
         Instructions:
-        - Accurately determine the **calories, protein, fat, and carbs** in the meal.
+
         - Provide a brief description of the meal. Maximum 254chars length
+        -if the meal consists of individual items (e.g., "2 eggs and a sausage"), return them **exactly as they appear**
+        - If the meal is a known dish (e.g., "goulash"), estimate the total grams and return it as `"400g goulash"`,
+        -Based on your calculations of a portion, accurately determine the calories, protein, fat, and carbs in the meal.
         - Rate the meal's health score on a scale of 1 to 10 (1 = unhealthy, 10 = very healthy).
         - ALWAYS return the response **strictly in this JSON format**:
         - Be prepared to encounter serbian meals like Musaka, becarac etc.
@@ -64,6 +68,7 @@ class MealController extends Controller
             "fat": (integer) Total fat in grams,
             "carbs": (integer) Total carbohydrates in grams,
             "description": (string) Detailed meal description (max 300 words)
+            "ingredients": (string) List of ingredients OR total grams of a meal
             "health_score": (integer) Health score between 1 and 10
         }
         ```
@@ -76,6 +81,7 @@ class MealController extends Controller
             "fat": 18,
             "carbs": 55,
             "description": "Grilled salmon with quinoa and steamed broccoli.",
+            "ingredients": 200g salmon, 100g quinoa, 100g broccoli,
             "health_score": 9
         }
         ```
@@ -105,6 +111,7 @@ class MealController extends Controller
             'fat' => $mealData['fat'] ?? 0,
             'carbs' => $mealData['carbs'] ?? 0,
             'description' => $mealData['description'] ?? 'No description available',
+            'ingredients' => $mealData['ingredients'] ?? 'Unknown ingredients',
             'health_score' => $mealData['health_score'] ?? 0,
             'image_path' => $imageUrl,
             'date' => now()->toDateString()
@@ -150,6 +157,101 @@ class MealController extends Controller
         ]);
 
         return to_route('meals.show', $meal);
+    }
+
+    public function statistics(Request $request){
+        $dailyInfos = DailyInfo::where('user_id', auth()->id())->get();
+
+        $calories = $dailyInfos->map(fn ($info) => [
+            'date' => $info->created_at->toDateString(),
+            'total_calories' => $info->total_calories,
+        ]);
+
+        $totalMeals = Meal::where('user_id', auth()->id())->count();
+
+        $mealsPerDay = Meal::where('user_id', auth()->id())
+            ->selectRaw('date, COUNT(*) as meal_count')
+            ->groupBy('date')
+            ->orderBy('date', 'desc')
+            ->get();
+
+        return inertia('Meals/Statistics', [
+            'calories' => $calories,
+            'totalMeals' => $totalMeals,
+            'mealsPerDay' => $mealsPerDay
+        ]);
+
+    }
+
+    public function recalculate(Request $request, Meal $meal){
+        $request->validate([
+            'ingredients' => 'required|string|max:255',
+        ]);
+
+        $changedIngredients = $request->input('ingredients');
+
+        $previousData = [
+            'calories' => $meal->calories,
+            'protein' => $meal->protein,
+            'fat' => $meal->fat,
+            'carbs' => $meal->carbs,
+            'health_score' => $meal->health_score,
+            'original_ingredients' => $meal->ingredients,
+        ];
+
+        $response = OpenAI::chat()->create([
+            'model' => 'gpt-4o',
+            'messages' => [
+                ['role' => 'system', 'content' => <<<EOT
+        You are a highly accurate nutrition assistant. Given a list of ingredients and previous nutrition data, **adjust the nutrition values** accordingly.
+           **Instructions:**
+        - Consider both the **original ingredients** and the **new ingredients**.
+        - If some ingredients remain unchanged, retain their nutritional values.
+        - If ingredients are removed or changed, **update the values accordingly**.
+        - Provide a new estimation for calories, protein, fat, and carbs.
+        - Keep the response in **strict JSON format**.
+            Format the response in **strict JSON**:
+            ```json
+        {
+            "calories": (integer),
+            "protein": (integer),
+            "fat": (integer),
+            "carbs": (integer),
+            "health_score": (integer) 1-10
+        }
+        EOT],
+                [
+                    'role' => 'user',
+                    'content' => "Recalculate based on these details:
+                - Old Ingredients: {$previousData['original_ingredients']}
+                - Old Nutrition Values: Calories: {$previousData['calories']}, Protein: {$previousData['protein']}g, Fat: {$previousData['fat']}g, Carbs: {$previousData['carbs']}g.
+                - New Ingredients:** {$changedIngredients}"
+                ],
+            ],
+            'response_format' => ['type' => 'json_object'],
+        ])->choices[0]->message->content;
+
+        $updatedData = json_decode($response, true);
+
+        if(!$updatedData){
+            return response()->json(['error' => 'failed to analyze the image']);
+        }
+
+        $meal->update([
+            'ingredients' => $changedIngredients,
+            'calories' => $updatedData['calories'],
+            'protein' => $updatedData['protein'],
+            'fat' => $updatedData['fat'],
+            'carbs' => $updatedData['carbs'],
+            'health_score' => $updatedData['health_score'],
+        ]);
+
+        return to_route('meals.show', $meal);
+    }
+
+    public function recalculateShow(Meal $meal)
+    {
+        return inertia('Meals/EditIngredients', ['meal' => $meal]);
     }
 
     /**
