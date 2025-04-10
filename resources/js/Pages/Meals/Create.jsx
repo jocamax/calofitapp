@@ -1,9 +1,10 @@
 import {Link, useForm} from "@inertiajs/react";
 import {useRef, useState} from "react";
 import { IoIosArrowBack } from "react-icons/io";
-import RunningCamel from "@/Animations/RunningCamel.jsx";
+//import RunningCamel from "@/Animations/RunningCamel.jsx";
 import {Overlay} from "@mantine/core";
-import Webcam from 'react-webcam';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
@@ -39,9 +40,17 @@ export default function Create() {
 
             <div className="flex flex-col items-center justify-center h-screen  bg-gray-100 text-black">
                 {processing && (
-                    <Overlay blur={4} className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 z-50">
-                        <RunningCamel />
-                        <h2 className='m-auto text-2xl'>Loading...</h2>
+                    <Overlay blur={4}
+                             className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 z-50">
+                        <div className="flex flex-col items-center justify-center text-center">
+                            <DotLottieReact
+                                className="w-64 mb-4"
+                                src="https://lottie.host/201b2ad4-4fc6-4d30-bfb0-c9637788d3a8/FhG5h0jOpg.lottie"
+                                loop
+                                autoplay
+                            />
+                            <h2 className="text-white text-2xl">Loading...</h2>
+                        </div>
                     </Overlay>
                 )}
                 <form onSubmit={handleSubmit} className="flex flex-col items-center w-full h-full">
