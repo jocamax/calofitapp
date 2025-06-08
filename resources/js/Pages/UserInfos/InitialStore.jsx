@@ -1,6 +1,6 @@
 import {useForm} from "@inertiajs/react";
 import {useState} from "react";
-export default function InitialStore(){
+export default function InitialStore({ onSuccess }){
     const { data, setData, post, processing, errors } = useForm({
         age: "",
         gender: "",
@@ -14,7 +14,10 @@ export default function InitialStore(){
         e.preventDefault();
         post(route('userinfo.initial'), {
             preserveScroll: true,
-            onSuccess: () => alert("User info saved successfully!"),
+            onSuccess: () => {
+                alert("User info saved successfully!")
+                if (onSuccess) onSuccess();
+            },
         });
     };
 

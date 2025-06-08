@@ -5,17 +5,20 @@ import ApplicationLogo from "@/Components/ApplicationLogo.jsx";
 import InitialStore from "@/Pages/UserInfos/InitialStore.jsx";
 
 export default function Onboarding({ user }) {
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const { post } = useForm();
     const [active, setActive] = useState(0);
     const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
     const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
     const completeOnboarding = () => {
-        post(route('onboarding.complete'), {
-            onSuccess: () => {
-                router.visit(route('daily_info.index'));
-            },
-        });
+        if(isSubmitted){
+            post(route('onboarding.complete'), {
+                onSuccess: () => {
+                    router.visit(route('daily_info.index'));
+                },
+            });
+        }
     };
 
     return (
@@ -60,7 +63,7 @@ export default function Onboarding({ user }) {
                     </div>
                 </Stepper.Step>
                 <Stepper.Step label="" description="">
-                <InitialStore/>
+                    <InitialStore onSuccess={() => setIsSubmitted(true)} />
                 </Stepper.Step>
                 <Stepper.Completed>
                     <h1 className='text-2xl font-bold'>Click Get Started <span className='text-red-600'>only if you saved your personal info</span></h1>

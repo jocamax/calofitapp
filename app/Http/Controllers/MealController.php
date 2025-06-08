@@ -259,6 +259,9 @@ class MealController extends Controller
      */
     public function destroy(Meal $meal)
     {
-        //
+        $user = auth()->id();
+        if($user == $meal->user()->id){
+            $meal->delete();
+        }
     }
 }
